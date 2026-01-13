@@ -340,11 +340,16 @@ function update(){
     countdown.innerText=Math.ceil((nextA-now)/86400000)}
 setInterval(update,1000);update();
 
-/* MAP */
+/* MAP - Tampilan Satelit */
 const rumahSaya = [1.178267, 104.080038]; 
 const rumahDia = [1.046056, 103.955594];
 const map = L.map('map', {zoomControl: false, attributionControl: false}).setView(rumahSaya, 13);
-L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png').addTo(map);
+
+// Menggunakan layer Satelit dari Esri
+L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+	attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
+}).addTo(map);
+
 const pinkIcon = L.divIcon({className: 'pulse-icon', html: "<div style='background-color:#ff4fa3; width:12px; height:12px; border-radius:50%; border:2px solid white;'></div>", iconSize: [12, 12]});
 L.marker(rumahSaya, {icon: pinkIcon}).addTo(map);
 L.marker(rumahDia, {icon: pinkIcon}).addTo(map);
