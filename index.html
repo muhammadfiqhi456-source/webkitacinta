@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Our Anniversary</title>
 <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Quicksand:wght@300;400;600&display=swap" rel="stylesheet">
 
@@ -12,265 +12,166 @@
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
 <style>
-body {
-    touch-action: pan-x pan-y; /* Mematikan pinch-zoom tapi tetap bisa scroll */
-}
 /* FONT UTAMA */
 *{
-    margin:0;padding:0;box-sizing:border-box;
-    font-family: 'Quicksand', sans-serif; /* Font bersih untuk HP */
+    margin:0;padding:0;box-sizing:border-box;
+    font-family: 'Quicksand', sans-serif;
 }
 
 body{
-    background: 
-    radial-gradient(circle at top,#ff4fa344,transparent 30%),
-    linear-gradient(135deg,#120018,#000);
-    color:#fff;overflow-x:hidden;
+    background: 
+    radial-gradient(circle at top,#ff4fa344,transparent 30%),
+    linear-gradient(135deg,#120018,#000);
+    color:#fff;overflow-x:hidden;
 }
 
-/* EFEK GRADASI TEKS AESTHETIC */
+/* Kunci scroll saat lock aktif */
+body.no-scroll {
+    overflow: hidden;
+    height: 100vh;
+}
+
 h1, h2, .hero span {
-    font-family: 'Dancing Script', cursive; /* Font Aesthetic */
-    background: linear-gradient(to right, #ff4fa3, #ff80ab, #ffffff);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+    font-family: 'Dancing Script', cursive;
+    background: linear-gradient(to right, #ff4fa3, #ff80ab, #ffffff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
 }
 
 /* LOCK SCREEN */
 .lock{
-    position:fixed;inset:0;
-    background:radial-gradient(circle,#2b0f3a,#000);
-    display:flex;flex-direction:column;
-    justify-content:center;align-items:center;
-    z-index:9999;text-align:center;padding: 20px;
+    position:fixed;inset:0;
+    background:radial-gradient(circle,#2b0f3a,#000);
+    display:flex;flex-direction:column;
+    justify-content:center;align-items:center;
+    z-index:9999;text-align:center;padding: 20px;
 }
 .lock h1 { font-size: 2.5rem; margin-bottom: 10px; }
-.lock input {
-    padding: 12px 20px;
-    border-radius: 30px;
-    border: 1px solid #ff4fa3;
-    background: rgba(255,255,255,0.1);
-    color: white;
-    text-align: center;
-    outline: none;
-    /* TAMBAHKAN INI */
-    font-size: 16px; 
+.lock input{
+    padding:12px 20px; border-radius:30px; border:1px solid #ff4fa3;
+    background: rgba(255,255,255,0.1); color: white; text-align:center; outline: none;
 }
 .lock button{
-    margin-top:15px;padding:12px 40px;
-    border:none;border-radius:30px;
-    background: linear-gradient(45deg, #ff4fa3, #ff1c8d);
-    color:white;font-weight:bold; box-shadow: 0 4px 15px rgba(255, 79, 163, 0.4);
+    margin-top:15px;padding:12px 40px;
+    border:none;border-radius:30px;
+    background: linear-gradient(45deg, #ff4fa3, #ff1c8d);
+    color:white;font-weight:bold; box-shadow: 0 4px 15px rgba(255, 79, 163, 0.4);
 }
 .lock small{color:#ff8080; display:none; margin-top: 10px;}
 
 /* SURPRISE SCREEN */
 .surprise{
-    position:fixed;inset:0;
-    background:radial-gradient(circle,#2b0f3a,#000);
-    z-index:9998; display:flex; flex-direction:column;
-    justify-content:center; align-items:center;
-    text-align:center; animation:fadeIn 1s; padding: 25px;
+    position:fixed;inset:0;
+    background:radial-gradient(circle,#2b0f3a,#000);
+    z-index:9998; display:flex; flex-direction:column;
+    justify-content:center; align-items:center;
+    text-align:center; animation:fadeIn 1s; padding: 25px;
 }
 .surprise h1{ font-size: 3.5rem; }
 .surprise p { font-size: 1.1rem; line-height: 1.6; margin-top: 10px; color: #fce4ec; }
 .surprise button{
-    margin-top:25px; padding:12px 35px;
-    border:none; border-radius:30px;
-    background: #ff4fa3; color:white; font-weight: bold;
+    margin-top:25px; padding:12px 35px;
+    border:none; border-radius:30px;
+    background: #ff4fa3; color:white; font-weight: bold;
 }
 
 /* HERO SECTION */
 .hero{
-    min-height:100vh; display:flex; flex-direction:column;
-    justify-content:center; align-items:center;
-    text-align:center; padding: 20px;
+    min-height:100vh; display:flex; flex-direction:column;
+    justify-content:center; align-items:center;
+    text-align:center; padding: 20px;
 }
 .hero h1{ font-size: 4.5rem; line-height: 1; }
 .hero p { font-weight: 300; letter-spacing: 1px; color: #ff80ab; margin-top: 10px; }
 
 /* TIMER BOX */
 .timer{
-    display:flex; gap:12px; justify-content:center;
-    margin-top:40px; flex-wrap:wrap;
+    display:flex; gap:12px; justify-content:center;
+    margin-top:40px; flex-wrap:wrap;
 }
 .time-box{
-    background: rgba(255, 79, 163, 0.1);
-    backdrop-filter: blur(5px);
-    border: 10px solid rgba(255, 79, 163, 0.3);
-    padding:15px 15px; border-radius:25px;
-    min-width:140px; text-align:center;
+    background: rgba(255, 79, 163, 0.1);
+    backdrop-filter: blur(5px);
+    border: 10px solid rgba(255, 79, 163, 0.3);
+    padding:15px 15px; border-radius:25px;
+    min-width:140px; text-align:center;
 }
 .time-box h2 { font-size: 2rem; -webkit-text-fill-color: white; }
 .time-box p { font-size: 0.8rem; color: #ff80ab; text-transform: uppercase; font-weight: 600; }
 
-/* TOPIC & CARDS */
 section{padding:50px 5%}
 .topic{
-    background:rgba(255,255,255,.03);
-    padding:30px 20px; border-radius:30px;
-    margin-bottom:40px; text-align:center;
-    border: 1px solid rgba(255,255,255,0.05);
+    background:rgba(255,255,255,.03);
+    padding:30px 20px; border-radius:30px;
+    margin-bottom:40px; text-align:center;
+    border: 1px solid rgba(255,255,255,0.05);
 }
 .topic h2{ font-size: 3rem; margin-bottom: 15px; }
 .place{ color: #ff80ab; font-style: italic; margin-bottom: 20px; font-size: 0.9rem; }
 
 /* SONG CARD SYSTEM */
 .songs-container {
-    display: grid; grid-template-columns: repeat(3, 1fr);
-    gap: 15px; margin-top: 20px;
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 15px; margin-top: 20px;
 }
 .song-card{
-    background: rgba(255, 255, 255, 0.05);
-    border-radius:20px; padding:12px;
-    border: 1px solid rgba(255, 79, 163, 0.1);
-    transition: 0.3s;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius:20px; padding:12px;
+    border: 1px solid rgba(255, 79, 163, 0.1);
+    transition: 0.3s;
 }
 .song-card img {
-    width: 100%; aspect-ratio: 1/1;
-    object-fit: cover; border-radius: 15px;
-    margin-bottom: 8px;
+    width: 100%; aspect-ratio: 1/1;
+    object-fit: cover; border-radius: 15px;
+    margin-bottom: 8px;
 }
 .song-card strong { color: #ff4fa3; font-size: 0.85rem; }
 .song-card small { color: #ccc; font-size: 0.7rem; }
-/* Update Tombol Sesuai Gambar */
 .song-card button {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 5px; /* Jarak antara icon dan teks */
-    background: rgba(0, 0, 0, 0.3); /* Transparan gelap */
-    border: 1px solid rgba(255, 255, 255, 0.2); /* Border tipis */
-    color: white;
-    width: 100%;
-    padding: 8px 5px;
-    border-radius: 30px; /* Bentuk pill sempurna */
-    margin-top: 12px;
-    cursor: pointer;
-    font-size: 0.65rem; /* Ukuran font pas untuk 3 kolom */
-    font-weight: 500;
-    transition: all 0.3s ease;
+    display: flex; align-items: center; justify-content: center;
+    gap: 5px; background: rgba(0, 0, 0, 0.3); border: 1px solid rgba(255, 255, 255, 0.2);
+    color: white; width: 100%; padding: 8px 5px; border-radius: 30px;
+    margin-top: 12px; cursor: pointer; font-size: 0.65rem; font-weight: 500;
 }
 
-/* Icon segitiga kecil di dalam tombol */
-.song-card button::before {
-    content: ''; /* Icon play outline yang elegan */
-    font-size: 0.8rem;
-}
-
-.song-card button:hover {
-    background: rgba(255, 255, 255, 0.1);
-    border-color: #ff4fa3;
-}
-
-/* Penyesuaian khusus HP (3 Kolom) */
-@media (max-width: 600px) {
-    .song-card button {
-        font-size: 0.55rem;
-        padding: 10px 2px;
-        gap: 3px;
-    }
-    .song-card button::before {
-        font-size: 0.6rem;
-    }
-}
-/* SWIPER / SLIDESHOW */
+/* SWIPER */
 .swiper { width: 100%; padding-bottom: 40px; }
 .swiper-slide {
-    width: 240px; height: 320px;
-    border-radius: 25px; overflow: hidden;
-    border: 2px solid rgba(255, 79, 163, 0.3);
+    width: 240px; height: 320px;
+    border-radius: 25px; overflow: hidden;
+    border: 2px solid rgba(255, 79, 163, 0.3);
 }
 .swiper-slide img { width: 100%; height: 100%; object-fit: cover; }
 
-/* MEDIA QUERY KHUSUS HP */
-@media (max-width: 600px) {
-    .hero h1 { font-size: 3.2rem; }
-    .topic h2 { font-size: 2.5rem; }
-    
-    .songs-container { grid-template-columns: repeat(3, 1fr); gap: 8px; }
-    .song-card { padding: 8px; }
-    .song-card strong { font-size: 0.6rem; }
-    .song-card small { font-size: 0.5rem; }
-    .song-card button { width: 28px; height: 28px; font-size: 10px; }
-
-    .time-box { min-width: 45%; padding: 5px; }
-    .swiper-slide { width: 180px; height: 250px; }
-    
-    .topic p[style*="font-size:2.5rem"] { font-size: 1.8rem !important; }
-}
-
 /* DRAMA SECTION */
 .drama-container {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 15px;
-    margin-top: 20px;
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 15px; margin-top: 20px;
 }
-
 .drama-card {
-    background: rgba(255, 255, 255, 0.03);
-    border-radius: 20px;
-    padding: 10px;
-    border: 1px solid rgba(255, 79, 163, 0.1);
-    transition: transform 0.3s ease;
-    text-align: left;
+    background: rgba(255, 255, 255, 0.03); border-radius: 20px;
+    padding: 10px; border: 1px solid rgba(255, 79, 163, 0.1);
+    transition: transform 0.3s ease; text-align: left;
 }
-
-.drama-card:hover {
-    transform: translateY(-10px);
-    border-color: #ff4fa3;
-}
-
 .drama-poster {
-    position: relative;
-    width: 100%;
-    aspect-ratio: 2/3;
-    border-radius: 15px;
-    overflow: hidden;
-    margin-bottom: 10px;
+    position: relative; width: 100%; aspect-ratio: 2/3;
+    border-radius: 15px; overflow: hidden; margin-bottom: 10px;
 }
-
-.drama-poster img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-
+.drama-poster img { width: 100%; height: 100%; object-fit: cover; }
 .rating {
-    position: absolute;
-    top: 8px;
-    right: 8px;
-    background: rgba(0, 0, 0, 0.7);
-    color: #ffb74d;
-    padding: 2px 8px;
-    border-radius: 10px;
-    font-size: 0.7rem;
-    font-weight: bold;
+    position: absolute; top: 8px; right: 8px; background: rgba(0, 0, 0, 0.7);
+    color: #ffb74d; padding: 2px 8px; border-radius: 10px; font-size: 0.7rem; font-weight: bold;
 }
 
-.drama-card strong {
-    color: #ff4fa3;
-    font-size: 0.9rem;
-    display: block;
-    margin-bottom: 5px;
-}
-
-.drama-card p {
-    font-size: 0.7rem;
-    color: #ccc;
-    line-height: 1.4;
-}
-
-/* Responsif HP */
 @media (max-width: 600px) {
-    .drama-container {
-        grid-template-columns: repeat(2, 1fr); /* Di HP jadi 2 kolom agar gambar tetap jelas */
-    }
-    .drama-card strong { font-size: 0.8rem; }
-    .drama-card p { font-size: 0.65rem; }
+    .hero h1 { font-size: 3.2rem; }
+    .topic h2 { font-size: 2.5rem; }
+    .songs-container { grid-template-columns: repeat(3, 1fr); gap: 8px; }
+    .drama-container { grid-template-columns: repeat(2, 1fr); }
+    .time-box { min-width: 45%; padding: 12px; }
+    .swiper-slide { width: 180px; height: 250px; }
 }
-/* ANIMATIONS */
+
 .love{ position:fixed;font-size:22px;pointer-events:none;animation:boom 1s forwards;z-index: 10000; }
 @keyframes boom{ to{transform:translateY(-100px) scale(2.5);opacity:0} }
 @keyframes fadeIn{from{opacity:0}to{opacity:1}}
@@ -278,321 +179,203 @@ section{padding:50px 5%}
 </style>
 </head>
 
-<body>
+<body class="no-scroll">
 
 <div class="lock" id="lock">
-<h1>🔒 Tebak Kuncinya Cinta</h1>
-<input type="password" id="password" placeholder="Password">
-<button onclick="unlock()">Buka</button>
-<small id="error">Password salah 💔</small>
+    <h1>🔒 Tebak Kuncinya Cinta</h1>
+    <input type="password" id="password" placeholder="Password">
+    <button onclick="unlock()">Buka</button>
+    <small id="error">Password salah 💔</small>
 </div>
 
 <div class="hero">
-<h1>Happy <span>Anniversary</span></h1>
-<p>Hari dimana kamu datang dan mengubah segalanya 💕</p>
-<p>💖💖💖💖💖💖💖💖💖💖💖💖💖💖💖💖💖💖💖💖💖💖</p>
-
-<div class="timer">
-<div class="time-box">
-<h2 id="daysTogether">0</h2>
-<p>Hari Bersama</p>
-</div>
-<div class="time-box">
-<h2 id="countdown">0</h2>
-<p>Menuju Anniversary</p>
-</div>
-</div>
+    <h1>Happy <span>Anniversary</span></h1>
+    <p>Hari dimana kamu datang dan mengubah segalanya 💕</p>
+    <p>💖💖💖💖💖💖💖💖💖💖💖💖💖💖💖💖💖💖💖💖💖💖</p>
+    <div class="timer">
+        <div class="time-box">
+            <h2 id="daysTogether">0</h2>
+            <p>Hari Bersama</p>
+        </div>
+        <div class="time-box">
+            <h2 id="countdown">0</h2>
+            <p>Menuju Anniversary</p>
+        </div>
+    </div>
 </div>
 
 <section>
+    <div class="topic distance-card">
+        <h2>📍 Rute Cinta Kita</h2>
+        <div id="map" style="width: 100%; height: 250px; border-radius: 20px; margin: 15px 0; border: 1px solid #ff4fa3; position: relative; z-index: 1;"></div>
+        <div onclick="openJagat()" style="cursor:pointer">
+            <p style="font-size:2rem; font-weight: bold; color: #ff4fa3; margin-bottom: 0;">
+                <span id="distance">0</span> KM
+            </p>
+            <small>Selangkah lebih dekat ke hatimu ❤️ (Tap untuk Jagat)</small>
+        </div>
+    </div>
 
-<div class="topic distance-card">
-    <h2>📍 Rute Cinta Kita</h2>
-    
-    <div id="map" style="width: 100%; height: 250px; border-radius: 20px; margin: 15px 0; border: 1px solid #ff4fa3; position: relative; z-index: 1;"></div>
-    
-    <div onclick="openJagat()" style="cursor:pointer">
-        <p style="font-size:2rem; font-weight: bold; color: #ff4fa3; margin-bottom: 0;">
-            <span id="distance">0</span> KM
-        </p>
-        <small>Selangkah lebih dekat ke hatimu ❤️ (Tap untuk Jagat)</small>
-    </div>
-</div>
+    <div class="topic">
+        <h2>🎶 Lagu Favorit Kamu</h2>
+        <div class="songs-container">
+            <div class="song-card">
+                <img src="cover1.jpg"><strong>Here Your Perfect</strong><small>Jamie Miller</small>
+                <button onclick="playSong(0, this)">▶</button>
+            </div>
+            <div class="song-card">
+                <img src="this is how you fall in love.jpg"><strong>this is how you fall in love</strong><small>Jeremy Zucker</small>
+                <button onclick="playSong(1, this)">▶</button>
+            </div>
+            <div class="song-card">
+                <img src="ILYSB.jpg"><strong>ILYSB</strong><small>LANY</small>
+                <button onclick="playSong(2, this)">▶</button>
+            </div>
+        </div>
+    </div>
 
-<div class="topic">
-<h2>🎶 Lagu Favorit Kamu</h2>
-<div class="songs-container">
-    <div class="song-card">
-        <img src="cover1.jpg" alt="Here Your Perfect">
-        <strong>Here Your Perfect</strong>
-        <small>Jamie Miller</small>
-        <button onclick="playSong(0, this)">▶</button>
-    </div>
-    <div class="song-card">
-        <img src="this is how you fall in love.jpg" alt="THYFIL">
-        <strong>this is how you fall in love</strong>
-        <small>Jeremy Zucker</small>
-        <button onclick="playSong(1, this)">▶</button>
-    </div>
-    <div class="song-card">
-        <img src="ILYSB.jpg" alt="ILYSB">
-        <strong>ILYSB</strong>
-        <small>LANY</small>
-        <button onclick="playSong(2, this)">▶</button>
-    </div>
-</div>
-</div>
+    <div class="topic">
+        <h2>💖 Our Photos</h2>
+        <div class="place">📍 DIMANA PUN ASAL AMA KAMU MAH AKU MAUU SAYANG💞</div>
+        <div class="swiper mySwiper">
+            <div class="swiper-wrapper">
+                <div class="swiper-slide"><img src="fd1.jpg"></div>
+                <div class="swiper-slide"><img src="fd2.jpg"></div>
+                <div class="swiper-slide"><img src="fd3.jpg"></div>
+                <div class="swiper-slide"><img src="fd4.jpg"></div>
+                <div class="swiper-slide"><img src="fd5.jpg"></div>
+                <div class="swiper-slide"><img src="fd6.jpg"></div>
+                <div class="swiper-slide"><img src="fd7.jpg"></div>
+                <div class="swiper-slide"><img src="fd8.jpg"></div>
+                <div class="swiper-slide"><img src="fd9.jpg"></div>
+                <div class="swiper-slide"><img src="fd10.jpg"></div>
+            </div>
+            <div class="swiper-pagination"></div>
+        </div>
+    </div>
 
-<div class="topic">
-<h2>💖 Our Photos</h2>
-<div class="place">📍 DIMANA PUN ASAL AMA KAMU MAH AKU MAUU SAYANG💞</div>   
-<div class="swiper mySwiper">
-  <div class="swiper-wrapper">
-    <div class="swiper-slide"><img src="fd1.jpg"></div>
-    <div class="swiper-slide"><img src="fd2.jpg"></div>
-    <div class="swiper-slide"><img src="fd3.jpg"></div>
-    <div class="swiper-slide"><img src="fd4.jpg"></div>
-    <div class="swiper-slide"><img src="fd5.jpg"></div>
-    <div class="swiper-slide"><img src="fd6.jpg"></div>
-    <div class="swiper-slide"><img src="fd7.jpg"></div>
-    <div class="swiper-slide"><img src="fd8.jpg"></div>
-    <div class="swiper-slide"><img src="fd9.jpg"></div>
-    <div class="swiper-slide"><img src="fd10.jpg"></div>
-</div>
-  <div class="swiper-pagination"></div>
-</div>
-</div>
+    <div class="topic">
+        <h2>💞My'Girl Photo </h2>
+        <div class="place">📍 Makasih ya sudah jadi salah satu alasan kenapa hari-hariku terasa lebih ringan</div>
+        <div class="swiper mySwiper">
+            <div class="swiper-wrapper">
+                <div class="swiper-slide"><img src="jd1.jpg"></div>
+                <div class="swiper-slide"><img src="jd2.jpg"></div>
+                <div class="swiper-slide"><img src="jd3.jpg"></div>
+                <div class="swiper-slide"><img src="jd4.jpg"></div>
+                <div class="swiper-slide"><img src="jd5.jpg"></div>
+                <div class="swiper-slide"><img src="jd6.jpg"></div>
+                <div class="swiper-slide"><img src="jd7.jpg"></div>
+                <div class="swiper-slide"><img src="jd8.jpg"></div>
+                <div class="swiper-slide"><img src="jd9.jpg"></div>
+                <div class="swiper-slide"><img src="jd10.jpg"></div>
+            </div>
+            <div class="swiper-pagination"></div>
+        </div>
+    </div>
 
-<div class="topic">
-<h2>💞My'Girl Photo </h2>
-<div class="place">📍 Makasih ya sudah jadi salah satu alasan kenapa hari-hariku terasa lebih ringan</div>
-<div class="swiper mySwiper">
-  <div class="swiper-wrapper">
-    <div class="swiper-slide"><img src="jd1.jpg"></div>
-    <div class="swiper-slide"><img src="jd2.jpg"></div>
-    <div class="swiper-slide"><img src="jd3.jpg"></div>
-    <div class="swiper-slide"><img src="jd4.jpg"></div>
-    <div class="swiper-slide"><img src="jd5.jpg"></div>
-    <div class="swiper-slide"><img src="jd6.jpg"></div>
-    <div class="swiper-slide"><img src="jd7.jpg"></div>
-    <div class="swiper-slide"><img src="jd8.jpg"></div>
-    <div class="swiper-slide"><img src="jd9.jpg"></div>
-    <div class="swiper-slide"><img src="jd10.jpg"></div>
-  </div>
-  <div class="swiper-pagination"></div>
-</div>
-</div>
-
-<div class="topic">
-    <h2>🎬 Drakor Favorit Kita</h2>
-    <div class="drama-container">
-        <div class="drama-card">
-            <div class="drama-poster">
-                <img src="drakor1.jpg" alt="Taxi Driver">
-                <div class="rating">⭐ 9.8</div>
-            </div>
-            <strong>Taxi Driver</strong>
-            <p>Kisah dimana orang baik ingin melakukan balas dendam ✨</p>
-        </div>
-
-        <div class="drama-card">
-            <div class="drama-poster">
-                <img src="drakor2.jpg" alt="Cafe MInamdang">
-                <div class="rating">⭐ 9.5</div>
-            </div>
-            <strong>Cafe Minamdang</strong>
-            <p>Kisah action yang dibumbui dengan adegan lucu dan romantis. ❤️</p>
-        </div>
-
-        <div class="drama-card">
-            <div class="drama-poster">
-                <img src="drakor3.jpg" alt="The Trauma Code">
-                <div class="rating">⭐ 9.2</div>
-            </div>
-            <strong>The Trauma Code</strong>
-            <p>Perjuangan para tenaga medis di pusat trauma yang bertarung melawan waktu demi menyelamatkan nyawa di tengah situasi paling kritis. 🌊</p>
-        </div>
-    </div>
-</div>
+    <div class="topic">
+        <h2>🎬 Drakor Favorit Kita</h2>
+        <div class="drama-container">
+            <div class="drama-card">
+                <div class="drama-poster"><img src="drakor1.jpg"><div class="rating">⭐ 9.8</div></div>
+                <strong>Taxi Driver</strong><p>Orang baik ingin balas dendam ✨</p>
+            </div>
+            <div class="drama-card">
+                <div class="drama-poster"><img src="drakor2.jpg"><div class="rating">⭐ 9.5</div></div>
+                <strong>Cafe Minamdang</strong><p>Action lucu dan romantis ❤️</p>
+            </div>
+            <div class="drama-card">
+                <div class="drama-poster"><img src="drakor3.jpg"><div class="rating">⭐ 9.2</div></div>
+                <strong>The Trauma Code</strong><p>Perjuangan medis bertaruh waktu 🌊</p>
+            </div>
+        </div>
+    </div>
 </section>
 
 <audio id="music"></audio>
-
 <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 
 <script>
 /* FULLSCREEN */
 document.addEventListener("click",()=>{
-if(!document.fullscreenElement)
-document.documentElement.requestFullscreen().catch(()=>{});
+    if(!document.fullscreenElement) document.documentElement.requestFullscreen().catch(()=>{});
 },{once:true});
-
-/* MUSIC SYSTEM */
-const songs=[
-    {title:"Here Your Perfect",artist:"Jamie Miller",src:"lagu.mp3"},
-    {title:"This Is How You Fall In Love",artist:"Jeremy Zucker",src:"lagu2.mp3"},
-    {title:"ILYSB",artist:"LANY",src:"lagu1.mp3"},
-];
-let currentIdx = -1;
-const m=document.getElementById("music");
-
-function playSong(n, btn){
-    if(currentIdx === n){
-        if(m.paused){
-            m.play();
-            btn.innerText = "▶";
-        } else {
-            m.pause();
-            btn.innerText = "▶";
-        }
-    } else {
-        document.querySelectorAll('.song-card button').forEach(b => b.innerText = "▶");
-        currentIdx = n;
-        m.src = songs[n].src;
-        m.play();
-        btn.innerText = "▶";
-    }
-}
-
-m.onended = () => {
-    document.querySelectorAll('.song-card button').forEach(b => b.innerText = "▶");
-};
-
-/* TIMER */
-const start=new Date("2024-01-15");
-function update(){
-const now=new Date();
-daysTogether.innerText=Math.floor((now-start)/86400000);
-let nextA=new Date(now.getFullYear(),start.getMonth(),start.getDate());
-if(nextA<now)nextA.setFullYear(now.getFullYear()+1);
-countdown.innerText=Math.ceil((nextA-now)/86400000)}
-setInterval(update,1000);update();
-
-/* DISTANCE LOGIC */
-// --- KOORDINAT (Ganti angka ini sesuai lokasi asli) ---
-const rumahSaya = [1.178267, 104.080038]; 
-const rumahDia = [1.046056, 103.955594];
-
-// --- INISIALISASI PETA ---
-const map = L.map('map', {
-    zoomControl: false, // Menghilangkan tombol +/- agar lebih bersih
-    attributionControl: false
-}).setView(rumahSaya, 13);
-
-// Layer Map Dark Mode agar estetik
-L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png').addTo(map);
-
-// Penanda (Marker) Custom Pink
-const pinkIcon = L.divIcon({
-    className: 'pulse-icon',
-    html: "<div style='background-color:#ff4fa3; width:12px; height:12px; border-radius:50%; border:2px solid white; box-shadow:0 0 10px #ff4fa3;'></div>",
-    iconSize: [12, 12],
-    iconAnchor: [6, 6]
-});
-
-// Tambahkan Titik Rumah
-L.marker(rumahSaya, {icon: pinkIcon}).addTo(map).bindPopup("Rumah Aku 🏠");
-L.marker(rumahDia, {icon: pinkIcon}).addTo(map).bindPopup("Rumah Kamu 💖");
-
-// Buat Garis Penghubung (Polyline)
-const rute = L.polyline([rumahSaya, rumahDia], {
-    color: '#ff4fa3',
-    weight: 3,
-    opacity: 0.6,
-    dashArray: '8, 8' // Garis putus-putus estetik
-}).addTo(map);
-
-// Otomatis fokus agar kedua titik terlihat
-map.fitBounds(rute.getBounds(), {padding: [30, 30]});
-
-// --- FUNGSI HITUNG JARAK OTOMATIS ---
-function hitungJarak(lat1, lon1, lat2, lon2) {
-    const R = 6371; // Radius bumi dalam KM
-    const dLat = (lat2 - lat1) * Math.PI / 180;
-    const dLon = (lon2 - lon1) * Math.PI / 180;
-    const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-              Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
-              Math.sin(dLon / 2) * Math.sin(dLon / 2);
-    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-    return (R * c).toFixed(1); // Hasil 1 angka di belakang koma
-}
-
-// Update angka KM di layar
-document.getElementById('distance').innerText = hitungJarak(rumahSaya[0], rumahSaya[1], rumahDia[0], rumahDia[1]);
-/* JAGAT */
-function openJagat(){
-window.location.href="jagat://map";
-setTimeout(()=>window.location.href=
-"https://play.google.com/store/apps/details?id=com.jagat.social",1200);
-}
-
-/* 5. INITIALIZE SWIPER */
-const swiper = new Swiper(".mySwiper", {
-  effect: "coverflow",
-  grabCursor: true,
-  centeredSlides: true,
-  slidesPerView: "auto",
-  coverflowEffect: {
-    rotate: 50,
-    stretch: 0,
-    depth: 100,
-    modifier: 1,
-    slideShadows: true,
-  },
-  pagination: {
-    el: ".swiper-pagination",
-  },
-  loop: true
-});
-
-/* LOVE FOTO (Updated for Swiper Slides) */
-document.querySelectorAll(".swiper-slide").forEach(slide=>{
-slide.onclick=e=>{
-for(let i=0;i<15;i++){
-let l=document.createElement("div");
-l.className="love";l.innerText="💖";
-l.style.left=e.pageX+"px";
-l.style.top=e.pageY+"px";
-document.body.appendChild(l);
-setTimeout(()=>l.remove(),1000);
-}}
-});
-
-/* SURPRISE */
-function showSurprise(){
-const s=document.createElement("div");
-s.className="surprise";
-s.innerHTML=`
-<h1> Surprise 💖</h1>
-<p>HI, Sayang</p>
-<button onclick="this.parentElement.remove()">Lanjutkan</button>`;
-document.body.appendChild(s);
-for(let i=0;i<25;i++){
-let h=document.createElement("div");
-h.innerHTML="💖";
-h.style.position="fixed";
-h.style.left=Math.random()*100+"%";
-h.style.top="-20px";
-h.style.fontSize=14+Math.random()*18+"px";
-h.style.animation=`fall ${2+Math.random()*3}s linear`;
-s.appendChild(h);
-}
-}
 
 /* UNLOCK */
 const correctPassword="1501";
 function unlock(){
-if(password.value===correctPassword){
-lock.style.display="none";
-showSurprise();
-}else error.style.display="block"}
-</script>
+    if(password.value===correctPassword){
+        lock.style.display="none";
+        document.body.classList.remove("no-scroll"); // Melepas kunci scroll
+        showSurprise();
+    }else error.style.display="block"}
 
+function showSurprise(){
+    const s=document.createElement("div");
+    s.className="surprise";
+    s.innerHTML=`<h1>Surprise 💖</h1><p>HI, Sayang</p><button onclick="this.parentElement.remove()">Lanjutkan</button>`;
+    document.body.appendChild(s);
+}
+
+/* MUSIC */
+const songs=[{src:"lagu.mp3"},{src:"lagu2.mp3"},{src:"lagu1.mp3"}];
+let currentIdx = -1;
+function playSong(n, btn){
+    if(currentIdx === n){
+        music.paused ? music.play() : music.pause();
+    } else {
+        document.querySelectorAll('.song-card button').forEach(b => b.innerText = "▶");
+        currentIdx = n; music.src = songs[n].src; music.play();
+    }
+}
+
+/* TIMER */
+const start=new Date("2024-01-15");
+function update(){
+    const now=new Date();
+    daysTogether.innerText=Math.floor((now-start)/86400000);
+    let nextA=new Date(now.getFullYear(),start.getMonth(),start.getDate());
+    if(nextA<now)nextA.setFullYear(now.getFullYear()+1);
+    countdown.innerText=Math.ceil((nextA-now)/86400000)}
+setInterval(update,1000);update();
+
+/* MAP */
+const rumahSaya = [1.178267, 104.080038]; 
+const rumahDia = [1.046056, 103.955594];
+const map = L.map('map', {zoomControl: false, attributionControl: false}).setView(rumahSaya, 13);
+L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png').addTo(map);
+const pinkIcon = L.divIcon({className: 'pulse-icon', html: "<div style='background-color:#ff4fa3; width:12px; height:12px; border-radius:50%; border:2px solid white;'></div>", iconSize: [12, 12]});
+L.marker(rumahSaya, {icon: pinkIcon}).addTo(map);
+L.marker(rumahDia, {icon: pinkIcon}).addTo(map);
+const rute = L.polyline([rumahSaya, rumahDia], {color: '#ff4fa3', weight: 3, dashArray: '8, 8'}).addTo(map);
+map.fitBounds(rute.getBounds(), {padding: [30, 30]});
+
+function hitungJarak(lat1, lon1, lat2, lon2) {
+    const R = 6371;
+    const dLat = (lat2 - lat1) * Math.PI / 180;
+    const dLon = (lon2 - lon1) * Math.PI / 180;
+    const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) + Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * Math.sin(dLon / 2) * Math.sin(dLon / 2);
+    return (R * (2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a)))).toFixed(1);
+}
+distance.innerText = hitungJarak(rumahSaya[0], rumahSaya[1], rumahDia[0], rumahDia[1]);
+
+function openJagat(){
+    window.location.href="jagat://map";
+    setTimeout(()=>window.location.href="https://play.google.com/store/apps/details?id=com.jagat.social",1200);
+}
+
+new Swiper(".mySwiper", {effect: "coverflow", grabCursor: true, centeredSlides: true, slidesPerView: "auto", loop: true});
+
+document.querySelectorAll(".swiper-slide").forEach(slide=>{
+    slide.onclick=e=>{
+        for(let i=0;i<15;i++){
+            let l=document.createElement("div"); l.className="love"; l.innerText="💖";
+            l.style.left=e.pageX+"px"; l.style.top=e.pageY+"px";
+            document.body.appendChild(l); setTimeout(()=>l.remove(),1000);
+        }
+    }
+});
+</script>
 </body>
 </html>
-
-
-apakah bener begini
-
-
-
