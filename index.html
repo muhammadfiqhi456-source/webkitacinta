@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!DOCTYPE html><!DOCTYPE html>
 <html lang="id">
 <head>
 <meta charset="UTF-8">
@@ -37,6 +37,18 @@ h1, h2, .hero span {
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
 }
+
+/* --- ANIMASI FONT SETIAP TOPIK --- */
+.topic h2 {
+    display: inline-block;
+    animation: floatingText 3s ease-in-out infinite;
+}
+
+@keyframes floatingText {
+    0%, 100% { transform: translateY(0) scale(1); filter: drop-shadow(0 0 5px #ff4fa3); }
+    50% { transform: translateY(-5px) scale(1.05); filter: drop-shadow(0 0 15px #ff4fa3); }
+}
+/* ---------------------------------- */
 
 /* LOCK SCREEN */
 .lock{
@@ -109,7 +121,7 @@ section{padding:50px 5%}
 .topic h2{ font-size: 3rem; margin-bottom: 15px; }
 .place{ color: #ff80ab; font-style: italic; margin-bottom: 20px; font-size: 0.9rem; }
 
-/* SONG CARD SYSTEM + ANIMASI */
+/* SONG CARD SYSTEM */
 .songs-container {
     display: grid; grid-template-columns: repeat(3, 1fr);
     gap: 15px; margin-top: 20px;
@@ -145,7 +157,7 @@ section{padding:50px 5%}
 }
 .swiper-slide img { width: 100%; height: 100%; object-fit: cover; }
 
-/* DRAMA SECTION + ANIMASI */
+/* DRAMA SECTION */
 .drama-container {
     display: grid; grid-template-columns: repeat(3, 1fr);
     gap: 15px; margin-top: 20px;
@@ -193,8 +205,9 @@ section{padding:50px 5%}
 
 <div class="hero">
     <h1>Happy <span>Anniversary</span></h1>
-    <p>Hari dimana kamu datang dan mengubah segalanya 💕</p>
-    <p>💖💖💖💖💖💖💖💖💖💖💖💖💖💖💖💖💖💖💖💖💖💖</p>
+</p>
+
+</p>Hari dimana kamu datang dan mengubah segalanya 💕</p>
     <div class="timer">
         <div class="time-box">
             <h2 id="daysTogether">0</h2>
@@ -218,7 +231,10 @@ section{padding:50px 5%}
             <small>Selangkah lebih dekat ke hatimu ❤️ (Tap untuk Jagat)</small>
         </div>
     </div>
+</dif>
 
+
+<section>
     <div class="topic">
         <h2>🎶 Lagu Favorit Kamu</h2>
         <div class="songs-container">
