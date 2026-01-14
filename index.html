@@ -18,11 +18,17 @@
     font-family: 'Quicksand', sans-serif;
 }
 
-body{
+body {
+    /* Perpaduan warna langit malam romantis */
     background: 
-    radial-gradient(circle at top,#ff4fa344,transparent 30%),
-    linear-gradient(135deg,#120018,#000);
-    color:#fff;overflow-x:hidden;
+        radial-gradient(circle at 20% 30%, #4b008233, transparent 40%),
+        radial-gradient(circle at 80% 70%, #ff1c8d22, transparent 40%),
+        linear-gradient(160deg, #0f0518 0%, #1a0a2e 50%, #050505 100%);
+    
+    color: #ffffff;
+    overflow-x: hidden;
+    min-height: 100vh;
+    background-attachment: fixed; /* Background tetap tenang saat di-scroll */
 }
 
 /* Kunci scroll saat lock aktif */
@@ -33,12 +39,48 @@ body.no-scroll {
     position: fixed; /* Menambah kestabilan di iOS */
     touch-action: none; /* Mematikan interaksi sentuh untuk scroll */
 }
-h1, h2, .hero span {
+h1, h2 {
     font-family: 'Dancing Script', cursive;
-    background: linear-gradient(to right, #ff4fa3, #ff80ab, #ffffff);
+    background: linear-gradient(to bottom right, #ffffff, #ffb2d9, #ff4fa3);
     background-clip: text;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
+    filter: drop-shadow(0 0 8px rgba(255, 79, 163, 0.3));
+}
+
+.topic {
+    /* Efek kaca transparan */
+    background: rgba(255, 255, 255, 0.04); 
+    backdrop-filter: blur(15px); /* Membuat background di belakangnya blur halus */
+    -webkit-backdrop-filter: blur(15px);
+    
+    border: 1px solid rgba(255, 255, 255, 0.1); /* Garis tepi tipis dan elegan */
+    padding: 35px 25px; 
+    border-radius: 40px; /* Sudut lebih bulat agar lebih lembut/lucu tapi elegan */
+    margin-bottom: 40px; 
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5); /* Bayangan dalam agar kartu terlihat timbul */
+    opacity: 0;
+    transform: translateY(50px);
+    transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    will-change: opacity, transform;
+}
+
+/* State AKTIF: Saat tersentuh scroll */
+.topic.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+
+/* State AKTIF: Saat tersentuh scroll */
+.topic.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+/* Menambahkan sedikit delay agar tidak muncul bersamaan jika berdekatan */
+.topic:nth-child(even) {
+    transition-delay: 0.1s;
 }
 
 /* --- ANIMASI FONT SETIAP TOPIK --- */
@@ -109,7 +151,7 @@ h1, h2, .hero span {
     backdrop-filter: blur(5px);
     border: 10px solid rgba(255, 79, 163, 0.3);
     padding:15px 15px; border-radius:25px;
-    min-width:140px; text-align:center;
+    min-width:120px; text-align:center;
 }
 .time-box h2 { font-size: 2rem; -webkit-text-fill-color: white; }
 .time-box p { font-size: 0.8rem; color: #ff80ab; text-transform: uppercase; font-weight: 600; }
@@ -160,6 +202,32 @@ section{padding:50px 5%}
 }
 .swiper-slide img { width: 100%; height: 100%; object-fit: cover; }
 
+/* Container bintang memenuhi layar */
+#stars-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1; /* Supaya di belakang teks */
+    pointer-events: none;
+}
+
+/* Bentuk dasar bintang */
+.star {
+    position: absolute;
+    background: white;
+    border-radius: 50%;
+    opacity: 0.5;
+    animation: twinkle var(--duration) infinite ease-in-out;
+}
+
+/* Animasi kelap-kelip */
+@keyframes twinkle {
+    0%, 100% { opacity: 0.3; transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.2); }
+}
+
 /* DRAMA SECTION */
 .drama-container {
     display: grid; grid-template-columns: repeat(3, 1fr);
@@ -198,6 +266,7 @@ section{padding:50px 5%}
 </head>
 
 <body class="no-scroll">
+    <div id="stars-container"></div>
 
 <div class="lock" id="lock">
     <h1>🔒 Tebak Kuncinya Cinta</h1>
@@ -302,22 +371,23 @@ section{padding:50px 5%}
         <div class="drama-container">
             <div class="drama-card">
                 <div class="drama-poster"><img src="drakor1.jpg"><div class="rating">⭐ 9.8</div></div>
-                <strong>Taxi Driver</strong><p>Orang baik ingin balas dendam ✨</p>
+                <strong>Taxi Driver</strong>
+                </p>Orang baik ingin balas dendam ✨</p>
             </div>
             <div class="drama-card">
                 <div class="drama-poster"><img src="drakor2.jpg"><div class="rating">⭐ 9.5</div></div>
                 <strong>Cafe Minamdang</strong>
-            </p>Action lucu dan romantis ❤️</p>
+                </p>Action lucu dan romantis ❤️</p>
             </div>
             <div class="drama-card">
                 <div class="drama-poster"><img src="drakor3.jpg"><div class="rating">⭐ 9.2</div></div>
                 <strong>The Trauma Code</strong>
-            </p>Perjuangan medis bertaruh waktu 🌊</p>
+                </p>Perjuangan medis bertaruh waktu 🌊</p>
             </div>
             <div class="drama-card">
                 <div class="drama-poster"><img src="drakor4.jpg"><div class="rating">⭐ 8.2</div></div>
                 <strong>Twinkling Watermelon</strong>
-            </p>Kisah seorang anak yang kembali ke masa muda ayahnya</p>
+                </p>p>Kisah seorang anak yang kembali ke masa muda ayahnya</p>
             </div>
         </div>
     </div>
@@ -333,7 +403,7 @@ document.addEventListener("click",()=>{
 },{once:true});
 
 /* UNLOCK */
-const correctPassword = "1501";
+const correctPassword = "1";
 
 function unlock() {
     const passwordInput = document.getElementById("password");
@@ -354,6 +424,31 @@ function unlock() {
     } else {
         errorMsg.style.display = "block";
     }
+}
+
+const starsContainer = document.getElementById('stars-container');
+const starCount = 200; // Kamu bisa ubah jumlah bintang di sini
+
+for (let i = 0; i < starCount; i++) {
+    const star = document.createElement('div');
+    star.className = 'star';
+    
+    // Ukuran acak antara 1px sampai 3px
+    const size = Math.random() * 3 + 'px';
+    star.style.width = size;
+    star.style.height = size;
+    
+    // Posisi acak di layar
+    star.style.left = Math.random() * 100 + '%';
+    star.style.top = Math.random() * 100 + '%';
+    
+    // Durasi kedip acak antara 2 sampai 5 detik
+    star.style.setProperty('--duration', Math.random() * 3 + 2 + 's');
+    
+    // Delay awal acak supaya tidak kedip barengan
+    star.style.animationDelay = Math.random() * 5 + 's';
+    
+    starsContainer.appendChild(star);
 }
 
 // Tambahan: Cegah scroll via touch saat lock aktif
@@ -411,17 +506,51 @@ function openJagat(){
     setTimeout(()=>window.location.href="https://play.google.com/store/apps/details?id=com.jagat.social",1200);
 }
 
-new Swiper(".mySwiper", {effect: "coverflow", grabCursor: true, centeredSlides: true, slidesPerView: "auto", loop: true});
-
-document.querySelectorAll(".swiper-slide, .song-card, .drama-card").forEach(el=>{
-    el.onclick=e=>{
-        for(let i=0;i<15;i++){
-            let l=document.createElement("div"); l.className="love"; l.innerText="💖";
-            l.style.left=e.pageX+"px"; l.style.top=e.pageY+"px";
-            document.body.appendChild(l); setTimeout(()=>l.remove(),1000);
-        }
-    }
+/* SWIPER */
+new Swiper(".mySwiper", {
+    effect: "coverflow", 
+    grabCursor: true, 
+    centeredSlides: true, 
+    slidesPerView: "auto", 
+    loop: true
 });
+
+/* EFEK KLIK LOVE */
+document.querySelectorAll(".swiper-slide, .song-card, .drama-card").forEach(el => {
+    el.onclick = e => {
+        for(let i=0; i<15; i++){
+            let l = document.createElement("div"); 
+            l.className = "love"; 
+            l.innerText = "💖";
+            l.style.left = e.pageX + "px"; 
+            l.style.top = e.pageY + "px";
+            document.body.appendChild(l); 
+            setTimeout(() => l.remove(), 1000);
+        }
+    };
+}); // Penutup forEach klik love
+
+/* ANIMASI SCROLL (INTERSECTION OBSERVER) */
+const observerOptions = {
+    threshold: 0.15 
+};
+
+const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            entry.target.classList.add('show');
+        } else {
+            // Hapus baris di bawah jika ingin animasi cuma sekali muncul saja
+            entry.target.classList.remove('show');
+        }
+    });
+}, observerOptions);
+
+// Daftarkan semua elemen .topic ke observer
+document.querySelectorAll('.topic').forEach(topic => {
+    observer.observe(topic);
+});
+
 </script>
 </body>
 </html>
