@@ -48,6 +48,48 @@ h1, h2 {
     filter: drop-shadow(0 0 8px rgba(255, 79, 163, 0.3));
 }
 
+/* game styles */
+#game-container {
+    margin-top: 20px;
+    position: relative;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 20px;
+    padding: 15px;
+    overflow: hidden;
+}
+
+#game-area {
+    width: 100%;
+    height: 300px;
+    position: relative;
+    cursor: crosshair;
+    display: none; /* Muncul saat game mulai */
+}
+
+#heart-target {
+    position: absolute;
+    font-size: 40px;
+    user-select: none;
+    transition: all 0.2s ease;
+    cursor: pointer;
+}
+
+#score {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #ff4fa3;
+    margin-bottom: 10px;
+}
+
+#start-game {
+    padding: 10px 25px;
+    background: linear-gradient(45deg, #ff4fa3, #ff1c8d);
+    border: none;
+    color: white;
+    border-radius: 30px;
+    font-weight: bold;
+    cursor: pointer;
+}
 .topic {
     /* Efek kaca transparan */
     background: rgba(255, 255, 255, 0.04); 
@@ -293,6 +335,18 @@ section{padding:50px 5%}
     </div>
 </div>
 
+<div class="topic">
+    <h2>🎮 Catch My Love Game</h2>
+    <p>Tangkap hatiku sebanyak mungkin! ❤️</p>
+    <div id="game-container">
+        <div id="score">Skor: 0</div>
+        <div id="game-area">
+            <div id="heart-target">💖</div>
+        </div>
+        <button id="start-game" onclick="startGame()">Mulai Game</button>
+    </div>
+</div>
+
 <section>
     <div class="topic distance-card">
         <h2>📍 Rute Cinta Kita</h2>
@@ -387,7 +441,7 @@ section{padding:50px 5%}
             <div class="drama-card">
                 <div class="drama-poster"><img src="drakor4.jpg"><div class="rating">⭐ 8.2</div></div>
                 <strong>Twinkling Watermelon</strong>
-                </p>Kisah seorang anak yang kembali ke masa muda ayahnya</p>
+                </p>p>Kisah seorang anak yang kembali ke masa muda ayahnya</p>
             </div>
         </div>
     </div>
@@ -506,6 +560,49 @@ function openJagat(){
     setTimeout(()=>window.location.href="https://play.google.com/store/apps/details?id=com.jagat.social",1200);
 }
 
+let score = 0;
+let gameTimer;
+const heart = document.getElementById('heart-target');
+const gameArea = document.getElementById('game-area');
+const scoreDisplay = document.getElementById('score');
+const startBtn = document.getElementById('start-game');
+
+function startGame() {
+    score = 0;
+    scoreDisplay.innerText = "Skor: 0";
+    startBtn.style.display = "none";
+    gameArea.style.display = "block";
+    moveHeart();
+    
+    // Game otomatis berhenti setelah 30 detik
+    gameTimer = setTimeout(() => {
+        gameArea.style.display = "none";
+        startBtn.style.display = "inline-block";
+        startBtn.innerText = "Main Lagi";
+        alert("Waktu Habis! Kamu menangkap " + score + " cintaku! ❤️");
+    }, 30000);
+}
+
+function moveHeart() {
+    const maxX = gameArea.clientWidth - 50;
+    const maxY = gameArea.clientHeight - 50;
+    
+    const randomX = Math.floor(Math.random() * maxX);
+    const randomY = Math.floor(Math.random() * maxY);
+    
+    heart.style.left = randomX + 'px';
+    heart.style.top = randomY + 'px';
+}
+
+heart.addEventListener('click', () => {
+    score++;
+    scoreDisplay.innerText = "Skor: " + score;
+    moveHeart();
+    
+    // Efek kecil saat diklik
+    heart.style.transform = "scale(1.5)";
+    setTimeout(() => heart.style.transform = "scale(1)", 100);
+});
 /* SWIPER */
 new Swiper(".mySwiper", {
     effect: "coverflow", 
@@ -554,6 +651,7 @@ document.querySelectorAll('.topic').forEach(topic => {
 </script>
 </body>
 </html>
+
 
 
 
