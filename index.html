@@ -29,11 +29,14 @@ body{
 body.no-scroll {
     overflow: hidden;
     height: 100vh;
+    width: 100vw;
+    position: fixed; /* Menambah kestabilan di iOS */
+    touch-action: none; /* Mematikan interaksi sentuh untuk scroll */
 }
-
 h1, h2, .hero span {
     font-family: 'Dancing Script', cursive;
     background: linear-gradient(to right, #ff4fa3, #ff80ab, #ffffff);
+    background-clip: text;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
 }
@@ -309,6 +312,10 @@ section{padding:50px 5%}
                 <div class="drama-poster"><img src="drakor3.jpg"><div class="rating">⭐ 9.2</div></div>
                 <strong>The Trauma Code</strong><p>Perjuangan medis bertaruh waktu 🌊</p>
             </div>
+            <div class="drama-card">
+                <div class="drama-poster"><img src="drakor4.jpg"><div class="rating">⭐ 8.2</div></div>
+                <strong>Twinkling Watermelon</strong><p>Kisah seorang anak yang kembali ke masa muda ayahnya</p>
+            </div>
         </div>
     </div>
 </section>
@@ -323,20 +330,35 @@ document.addEventListener("click",()=>{
 },{once:true});
 
 /* UNLOCK */
-const correctPassword="1501";
-function unlock(){
-    if(password.value===correctPassword){
-        lock.style.display="none";
-        document.body.classList.remove("no-scroll");
-        showSurprise();
-    }else error.style.display="block"}
+const correctPassword = "1501";
 
-function showSurprise(){
-    const s=document.createElement("div");
-    s.className="surprise";
-    s.innerHTML=`<h1>Surprise 💖</h1><p>HI, Sayang</p><button onclick="this.parentElement.remove()">Lanjutkan</button>`;
-    document.body.appendChild(s);
+function unlock() {
+    const passwordInput = document.getElementById("password");
+    const lockScreen = document.getElementById("lock");
+    const errorMsg = document.getElementById("error");
+
+    if (passwordInput.value === correctPassword) {
+        // Hapus lock screen
+        lockScreen.style.display = "none";
+        
+        // Kembalikan scroll
+        document.body.classList.remove("no-scroll");
+        
+        // Khusus untuk mengaktifkan kembali touch-action
+        document.body.style.touchAction = "auto";
+        
+        showSurprise();
+    } else {
+        errorMsg.style.display = "block";
+    }
 }
+
+// Tambahan: Cegah scroll via touch saat lock aktif
+document.addEventListener('touchmove', function (e) {
+    if (document.body.classList.contains('no-scroll')) {
+        e.preventDefault();
+    }
+}, { passive: false });
 
 /* MUSIC */
 const songs=[{src:"lagu.mp3"},{src:"lagu2.mp3"},{src:"lagu1.mp3"}];
@@ -400,4 +422,6 @@ document.querySelectorAll(".swiper-slide, .song-card, .drama-card").forEach(el=>
 </script>
 </body>
 </html>
+
+
 
